@@ -10,11 +10,11 @@ import 'package:md_customer/login/views/login.dart';
 import 'package:md_customer/values/values.dart';
 
 class LoginRepository {
-  Future<LoginModel> login(String phone, String password) async {
-    final body = jsonEncode({'phoneNumber': phone, 'password': password});
+  Future<LoginModel> login(String email, String password) async {
+    final body = jsonEncode({'email': email, 'password': password});
 
     final headers = {"Content-type": "application/json"};
-    const url = "http://$ip:8080/passenger/login";
+    const url = "http://$ip:8080/busAdmin/login";
     TimeoutHttpClient client =
         TimeoutHttpClient(http.Client(), timeout: Duration(seconds: 10));
 
@@ -34,6 +34,7 @@ class LoginRepository {
     } on SocketException catch (e) {
       throw GeneralException("Please Check your Internet Connection");
     } catch (e) {
+      print(e);
       throw GeneralException("Something Went Wrong!");
     }
   }

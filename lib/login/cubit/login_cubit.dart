@@ -3,22 +3,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:md_customer/exceptions/general_exception.dart';
 import 'package:md_customer/login/model/login_model.dart';
 import 'package:md_customer/login/repository/login_repository.dart';
-import 'package:md_customer/register/repository/register_repository.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepository repository;
   LoginCubit(this.repository) : super(LoginInitialState());
 
-  void onClickSignUp(String phone, String password) async {
+  void onClickSignUp(String email, String password) async {
     int errorCount = 0;
-    if (phone.isEmpty) {
+    if (email.isEmpty) {
       errorCount++;
-      emit(LoginPhoneFieldError(errorMessage: "Phone can't be Empty!"));
-    } else if (!RegExp(r'^(98|97)\d{8}$').hasMatch(phone)) {
+      emit(LoginEmailFieldError(errorMessage: "Email can't be Empty!"));
+    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       errorCount++;
-      emit(LoginPhoneFieldError(errorMessage: "Invalid Phone Number"));
+      emit(LoginEmailFieldError(errorMessage: "Invalid Email"));
     } else {
-      emit(LoginPhoneFieldError());
+      emit(LoginEmailFieldError());
     }
     if (password.isEmpty) {
       errorCount++;
@@ -29,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (errorCount == 0) {
       emit(LoginLoadingState());
       try {
-        LoginModel model = await repository.login(phone, password);
+        LoginModel model = await repository.login(email, password);
         emit(LoginInitialState());
         if (model.statusCode == 200) {
           FlutterSecureStorage storage = FlutterSecureStorage();
@@ -57,9 +56,9 @@ abstract class LoginActionState extends LoginState {}
 
 class LoginInitialState extends LoginState {}
 
-class LoginPhoneFieldError extends LoginState {
+class LoginEmailFieldError extends LoginState {
   String? errorMessage;
-  LoginPhoneFieldError({this.errorMessage});
+  LoginEmailFieldError({this.errorMessage});
 }
 
 class LoginPasswordFieldError extends LoginState {

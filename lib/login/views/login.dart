@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:md_customer/helper/elevatedButton.dart';
-import 'package:md_customer/helper/material_state_color.dart';
 import 'package:md_customer/helper/textField.dart';
 import 'package:md_customer/login/cubit/login_cubit.dart';
-import 'package:md_customer/register/cubit/register_cubit.dart';
 
 import '../../helper/colors.dart';
 
@@ -14,7 +12,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     LoginCubit bloc = BlocProvider.of<LoginCubit>(context);
     return Scaffold(
@@ -53,27 +51,27 @@ class Login extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                    // -----------Phone Number-----------------
+                    // -----------Email-----------------
                     BlocBuilder<LoginCubit, LoginState>(
                         buildWhen: (previous, current) =>
-                            current is LoginPhoneFieldError,
+                            current is LoginEmailFieldError,
                         builder: (context, state) {
-                          if (state is LoginPhoneFieldError &&
+                          if (state is LoginEmailFieldError &&
                               state.errorMessage != null) {
                             return getInputFormInputText(
-                                inputFormatter: getDigitOnlyFormatter(),
-                                controller: phoneController,
-                                hintText: "Phone",
-                                icon: Icons.phone,
+                                inputFormatter: getAllCharFormatter(),
+                                controller: emailController,
+                                hintText: "Email",
+                                icon: Icons.email,
                                 errorText: state.errorMessage,
-                                type: TextInputType.phone);
+                                type: TextInputType.emailAddress);
                           } else {
                             return getInputFormInputText(
-                                inputFormatter: getDigitOnlyFormatter(),
-                                controller: phoneController,
-                                hintText: "Phone",
-                                icon: Icons.phone,
-                                type: TextInputType.phone);
+                                inputFormatter: getAllCharFormatter(),
+                                controller: emailController,
+                                hintText: "Email",
+                                icon: Icons.email,
+                                type: TextInputType.emailAddress);
                           }
                         }),
                     SizedBox(
@@ -116,7 +114,7 @@ class Login extends StatelessWidget {
                             text: "Sign In",
                             onClick: () {
                               bloc.onClickSignUp(
-                                phoneController.text,
+                                emailController.text,
                                 passwordController.text,
                               );
                             },
@@ -126,7 +124,7 @@ class Login extends StatelessWidget {
                             text: "Sign In",
                             onClick: () {
                               bloc.onClickSignUp(
-                                phoneController.text,
+                                emailController.text,
                                 passwordController.text,
                               );
                             });
